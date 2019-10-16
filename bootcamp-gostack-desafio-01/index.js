@@ -1,6 +1,7 @@
 const express = require("express");
 const server = express();
 server.use(express.json());
+server.use(addReqsDone);
 
 // localhost:3000/teste
 
@@ -31,12 +32,12 @@ function addReqsDone(req, res, next) {
 }
 
 //Get - listar todos os projetos
-server.get("/projects", addReqsDone, (req, res) => {
+server.get("/projects", (req, res) => {
   return res.json(projects);
 });
 
 //Post - add projeto
-server.post("/projects", addReqsDone, (req, res) => {
+server.post("/projects", (req, res) => {
   const { id, title } = req.body;
   const arrStruct = {
     id,
@@ -48,20 +49,15 @@ server.post("/projects", addReqsDone, (req, res) => {
 });
 
 // Post - add tasks á um projeto
-server.post(
-  "/projects/:id/tasks",
-  checkIfProjectExists,
-  addReqsDone,
-  (req, res) => {
-    const { tasks } = req.body;
-    const { id } = req.params;
-    projects[id].tasks = tasks;
-    return res.json(projects);
-  }
-);
+server.post("/projects/:id/tasks", checkIfProjectExists, (req, res) => {
+  const { tasks } = req.body;
+  const { id } = req.params;
+  projects[id].tasks = tasks;
+  return res.json(projects);
+});
 
 // Put - editar titulo do projeto
-server.put("/projects/:id", checkIfProjectExists, addReqsDone, (req, res) => {
+server.put("/projects/:id", checkIfProjectExists, (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
   const project = projects.find(p => p.id == id);
@@ -70,7 +66,7 @@ server.put("/projects/:id", checkIfProjectExists, addReqsDone, (req, res) => {
 });
 
 // Delete - deletar um projeto
-server.delete("/projects/:id", addReqsDone, (req, res) => {
+server.delete("/projects/:id", checkIfProjectExists, (req, res) => {
   const { id } = req.params;
   projects.splice(id, 1);
   return res.send();
