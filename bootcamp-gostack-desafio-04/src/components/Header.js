@@ -6,12 +6,14 @@ import fb_icon from "../assets/fb.png";
 class Header extends Component {
   render() {
     return (
-      <div id="header">
-        <img id="facebook_icon" src={fb_icon} />
-        <div id="my_prof">
-          <p id="my_profile">My Profile</p>
+      <header id="main-header">
+        <div className="content">
+          <img className="fb_icon" src={fb_icon} />
+          <a className="proflink" href="#">
+            My Profile
+          </a>
         </div>
-      </div>
+      </header>
     );
   }
 }
